@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { collection, onSnapshot, query, orderBy, where } from "firebase/firestore";
-import { db } from '../firebase';
+import db from '../firebase';
 import { Link } from 'react-router-dom';
 import ListItem from '../components/ListItem';
 

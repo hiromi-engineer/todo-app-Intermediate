@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { db } from '../firebase';
+import db from '../firebase';
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { Link, useNavigate } from 'react-router-dom';
 import Form from '../components/Form';

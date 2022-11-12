@@ -16,6 +16,7 @@
 - ページ遷移
 - 各ページ、フォーム部分、リストの各項目をコンポーネント化
 - Typescript化
+- PWA化
 
 以下URLで公開
 https://todo-app-new-4b70e.web.app/

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { db } from '../firebase';
+import db from '../firebase';
 import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 import Form from '../components/Form';
