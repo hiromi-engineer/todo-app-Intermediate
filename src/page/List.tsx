@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { collection, onSnapshot, query, orderBy, where } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import db from '../firebase';
 import { Link } from 'react-router-dom';
 import ListItem from '../components/ListItem';
@@ -19,10 +19,9 @@ interface FILTER {
 
 const List = () => {
   const [todos, setTodos] = useState<ListTodo[]>([]);
-  const [filter, setFilter] = useState<FILTER>({status: ''});
+  const [filter, setFilter] = useState<FILTER>({status: '全て'});
   const [order, setOrder] = useState<string>('create-new');
   useEffect(() => {
-    const a = orderBy("timestamp", "desc");
     const queryOrder = order === 'deadline-near' ? orderBy("deadline", "asc") : orderBy("timestamp", order === 'create-new' ? "desc" : "asc");
     const todoDB = query(collection(db, "todos"), queryOrder);
     onSnapshot(todoDB, newDB => {
@@ -30,6 +29,13 @@ const List = () => {
       setTodos(newData);
     });
   }, [order]);
+
+  const statuses = ['全て', '未着手', '進行中', '完了'];
+  const orderes = [
+    {value: 'create-new', desc: '作成日が新しい順'},
+    {value: 'create-old', desc: '作成日が古い順'},
+    {value: 'deadline-near', desc: '期限が早い順'},
+  ];
 
   const changeFilterStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilter({...filter, status: e.target.value });
@@ -45,21 +51,16 @@ const List = () => {
       <Link to={'/new/'} style={{display: 'inline-block',margin: '20px 0'}}>新規作成</Link><br />
       <span>表示するステータス：</span>
       <select name="status" value={filter.status} onChange={changeFilterStatus}>
-        <option value="">全て</option>
-        <option value="未着手">未着手</option>
-        <option value="進行中">進行中</option>
-        <option value="完了">完了</option>
+        {statuses.map(status => <option value={status}>{status}</option>)}
       </select><br/>
       <span>並び順：</span>
       <select name="order" value={order} onChange={changeOrder}>
-        <option value="create-new">作成日が新しい順</option>
-        <option value="create-old">作成日が古い順</option>
-        <option value="deadline-near">期限が早い順</option>
+        {orderes.map(item => <option value={item.value}>{item.desc}</option>)}
       </select>
       <ul>
         { todos.map(todo => {
             return (
-              (!filter.status || todo.status === filter.status) && <li key={todo.id}><ListItem todo={todo} /></li>
+              (filter.status === '全て' || todo.status === filter.status) && <li key={todo.id}><ListItem todo={todo} /></li>
             );
           })
         }
